@@ -8,12 +8,12 @@ app = FastAPI()
 
 
 @app.get("/health")
-def health():
+async def health():
     return {"app": settings.app_name, "status": "ok"}
 
 
 @app.post("/metrics")
-def get_metrics(request: StandMetricRequest):
+async def get_metrics(request: StandMetricRequest):
     datalayer = request.datalayer
     stands = request.stands
     stats = calculate(datalayer=datalayer, stands=stands)

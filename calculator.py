@@ -33,15 +33,7 @@ def get_gdal_env(
         "GDAL_TIFF_OVR_BLOCK_SIZE": 128,
         "CPL_DEBUG": settings.cpl_debug,
     }
-    # match settings.raster_provider:
-    #     case "aws":
-    #         gdal_env["session"] = get_aws_session()
-    #     case "gcp":
-    #         gdal_env["GOOGLE_APPLICATION_CREDENTIALS"] = (
-    #             settings.google_application_credentials
-    #         )
-    #     case _:
-    #         pass
+
     return gdal_env
 
 
@@ -53,10 +45,11 @@ def url_to_local(url: str) -> str:
 
 def to_metric_result(data: Dict[str, Any], datalayer_id: int) -> MetricResult:
     properties = data.get("properties", {})
+    statistics = {key: properties.get(key, None) for key in STATISTICS.split(" ")}
     data = {
         "stand_id": properties.get("id"),
         "datalayer_id": datalayer_id,
-        **{key: properties.get(key) for key in STATISTICS.split(" ")},
+        **statistics,
     }
     return MetricResult(**data)
 
