@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Optional
 
 from geojson_pydantic import Feature, FeatureCollection
 from pydantic import BaseModel
@@ -17,3 +17,14 @@ class StandMetricRequest(BaseModel):
 
 class StandMetricResponse(BaseModel):
     features: List[Feature]
+
+
+class MetricResult(BaseModel):
+    stand_id: int
+    datalayer_id: int
+    min: Optional[float]
+    mean: Optional[float]
+    median: Optional[float]
+    max: Optional[float]
+    majority: Optional[float]
+    minority: Optional[float]

@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import rasterio
 from boto3.session import Session
@@ -7,7 +7,7 @@ from geojson_pydantic import FeatureCollection
 from rasterstats import zonal_stats
 
 from config import settings
-from models import DataLayer
+from models import DataLayer, MetricResult
 
 STATISTICS = "min mean max median sum count majority minority"
 
@@ -51,10 +51,20 @@ def url_to_local(url: str) -> str:
     return f"/datastore/{parts}"
 
 
+def to_metric_result(data: Dict[str, Any], datalayer_id: int) -> MetricResult:
+    properties = data.get("properties", {})
+    data = {
+        "stand_id": properties.get("id"),
+        "datalayer_id": datalayer_id,
+        **{key: properties.get(key) for key in STATISTICS.split(" ")},
+    }
+    return MetricResult(**data)
+
+
 def calculate(
     datalayer: DataLayer,
     stands: FeatureCollection,
-) -> FeatureCollection:
+) -> List[MetricResult]:
     local_path = url_to_local(datalayer.url)
     with rasterio.Env(**get_gdal_env()):
         stats = zonal_stats(
@@ -65,7 +75,5 @@ def calculate(
             nodata=datalayer.nodata,
             band=1,
         )
-        return FeatureCollection(
-            type="FeatureCollection",
-            features=stats,
-        )
+
+        return list([to_metric_result(feature, datalayer.id) for feature in stats])
