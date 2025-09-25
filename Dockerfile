@@ -1,0 +1,17 @@
+FROM ghcr.io/astral-sh/uv:latest AS builder
+
+FROM ghcr.io/osgeo/gdal:ubuntu-small-latest
+COPY --from=builder /uv /uvx /bin/
+
+ENV PYTHONUNBUFFERED True
+ENV APP_HOME /app
+
+ADD . /app
+WORKDIR /app
+RUN uv sync --locked --no-install-project
+
+
+EXPOSE 8000
+CMD ["uv", "run", "fastapi", "run", "--host", "0.0.0.0"]
+
+# TAG = "gcr.io/planscape-23d66/stand-metrics-test"
