@@ -1,0 +1,18 @@
+[project]
+name = "stand-metrics"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "boto3>=1.40.38",
+    "fastapi[standard]>=0.117.1",
+    "geojson-pydantic>=2.0.0",
+    "pydantic-settings>=2.11.0",
+    "rasterstats>=0.20.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.13.2",
+]
