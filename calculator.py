@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 import rasterio
@@ -44,14 +45,21 @@ def get_gdal_env(
     return gdal_env
 
 
+def url_to_local(url: str) -> str:
+    path = Path(url)
+    parts = "/".join(path.parts[2:])
+    return f"/datastore/{parts}"
+
+
 def calculate(
     datalayer: DataLayer,
     stands: FeatureCollection,
 ) -> FeatureCollection:
+    local_path = url_to_local(datalayer.url)
     with rasterio.Env(**get_gdal_env()):
         stats = zonal_stats(
             vectors=stands,
-            raster=datalayer.url,
+            raster=local_path,
             geojson_out=True,
             stats=STATISTICS,
             nodata=datalayer.nodata,
