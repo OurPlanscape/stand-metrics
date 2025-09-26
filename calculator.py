@@ -43,12 +43,11 @@ def url_to_local(url: str) -> str:
     return f"/datastore/{parts}"
 
 
-def to_metric_result(data: Dict[str, Any], datalayer_id: int) -> MetricResult:
+def to_metric_result(data: Dict[str, Any]) -> MetricResult:
     properties = data.get("properties", {})
     statistics = {key: properties.get(key, None) for key in STATISTICS.split(" ")}
     data = {
         "stand_id": properties.get("id"),
-        "datalayer_id": datalayer_id,
         **statistics,
     }
     return MetricResult(**data)
@@ -69,4 +68,4 @@ def calculate(
             band=1,
         )
 
-        return list([to_metric_result(feature, datalayer.id) for feature in stats])
+        return list([to_metric_result(feature) for feature in stats])
