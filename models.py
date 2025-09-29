@@ -21,7 +21,6 @@ class StandMetricResponse(BaseModel):
 
 class MetricResult(BaseModel):
     stand_id: int
-    datalayer_id: int
     min: Optional[float]
     mean: Optional[float]
     median: Optional[float]
