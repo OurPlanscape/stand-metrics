@@ -8,7 +8,7 @@ ENV APP_HOME /app
 
 ADD . /app
 WORKDIR /app
-RUN uv sync --locked --no-install-project
+RUN uv sync --locked --no-install-project --dev
 
 
 EXPOSE 8000
