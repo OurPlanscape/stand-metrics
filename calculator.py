@@ -37,10 +37,18 @@ def get_gdal_env(
     return gdal_env
 
 
-def url_to_local(url: str) -> str:
+ENV_BUCKET_MAPPING = {
+    "dev": "/datastore",
+    "staging": "/datastore-staging",
+    "production": "/datastore-production",
+}
+
+
+def url_to_local(url: str, env: str) -> str:
     path = Path(url)
     parts = "/".join(path.parts[2:])
-    return f"/datastore/{parts}"
+    bucket = ENV_BUCKET_MAPPING[env]
+    return f"{bucket}/{parts}"
 
 
 def to_metric_result(data: Dict[str, Any]) -> MetricResult:
@@ -56,8 +64,11 @@ def to_metric_result(data: Dict[str, Any]) -> MetricResult:
 def calculate(
     datalayer: DataLayer,
     stands: FeatureCollection,
+    env: Optional[str] = None,
 ) -> List[MetricResult]:
-    local_path = url_to_local(datalayer.url)
+    if not env:
+        env = "dev"
+    local_path = url_to_local(datalayer.url, env=env)
     with rasterio.Env(**get_gdal_env()):
         stats = zonal_stats(
             vectors=stands,
