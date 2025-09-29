@@ -16,5 +16,6 @@ async def health():
 async def get_metrics(request: StandMetricRequest):
     datalayer = request.datalayer
     stands = request.stands
-    stats = calculate(datalayer=datalayer, stands=stands)
+    env = request.env
+    stats = calculate(datalayer=datalayer, stands=stands, env=env)
     return stats
