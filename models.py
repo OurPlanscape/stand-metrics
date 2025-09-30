@@ -13,7 +13,6 @@ class DataLayer(BaseModel):
 class StandMetricRequest(BaseModel):
     datalayer: DataLayer
     stands: FeatureCollection
-    env: Optional[str] = "dev"
 
 
 class StandMetricResponse(BaseModel):
