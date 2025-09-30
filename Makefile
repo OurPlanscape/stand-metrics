@@ -1,17 +1,20 @@
 .PHONY: build deploy test
 
 PROJECT=planscape-23d66
-APP=stand-metrics-test
-TAG=gcr.io/$(PROJECT)/$(APP)
+APP_NAME=stand-metrics
+ENV=dev
+VERSION="$$(date '+%Y.%m.%d')-$$(git log --abbrev=10 --format=%h | head -1)"
+APP=$(APP_NAME)-$(ENV)
+DOCKER_REPO=planscape-$(APP_NAME)-$(ENV)
+DOCKER_TAG=gcr.io/$(PROJECT)/$(DOCKER_REPO)/$(APP_NAME):$(VERSION)
 REGION=us-central1
 
 build:
-	docker build -t $(TAG) .
+	docker build -t $(DOCKER_TAG) .
 
-# not really used as GCP has it's own trigger
 deploy: build
-	gcloud builds submit --tag $(TAG)
-	gcloud run deploy $(APP) --image $(TAG) --platform managed --region $(REGION) --allow-unauthenticated
+	gcloud builds submit --tag $(DOCKER_TAG)
+	gcloud run deploy $(APP) --image $(DOCKER_TAG) --platform managed --region $(REGION) --allow-unauthenticated
 
 run:
 	docker compose up
