@@ -14,5 +14,12 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "pytest-mock>=3.15.1",
+    "pytest>=8.4.2",
     "ruff>=0.13.2",
+    "pytest-cov>=7.0.0",
 ]
+
+[tool.pytest.ini_options]
+addopts = "--cov --cov-append --cov-report term-missing --no-cov-on-fail --no-header --disable-warnings -rf --durations=5"
+testpaths = ["tests"]
