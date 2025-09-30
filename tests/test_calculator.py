@@ -1,28 +1,10 @@
-import pytest
 from geojson_pydantic import FeatureCollection
 
-from calculator import calculate, url_to_local
+from calculator import calculate
 from models import DataLayer
 
 
-class TestURLToLocal:
-    def test_returns_correctly(self):
-        url = "gs://planscape-datastore-dev/datalayers/1/a27c1c61-c99d-464e-91f7-0abc94bfe36c.tif"
-        local = url_to_local(url, env="dev")
-        assert (
-            local == "/datastore/datalayers/1/a27c1c61-c99d-464e-91f7-0abc94bfe36c.tif"
-        )
-
-    def test_raise_key_error(self):
-        url = "gs://planscape-datastore-dev/datalayers/1/a27c1c61-c99d-464e-91f7-0abc94bfe36c.tif"
-        with pytest.raises(KeyError):
-            url_to_local(url, env="foo")
-
-
 class TestCalculatorFunction:
-    def test_foo(self):
-        assert 1 == 1
-
     def test_calculate_calls_zonal_stats(self, mocker):
         result = [
             {
@@ -55,5 +37,5 @@ class TestCalculatorFunction:
             }
         )
         zonal_stats = mocker.patch("calculator.zonal_stats", return_value=result)
-        result = calculate(datalayer=datalayer, stands=stands, env="dev")
+        result = calculate(datalayer=datalayer, stands=stands)
         zonal_stats.assert_called()
