@@ -14,7 +14,7 @@ build:
 
 deploy: build
 	gcloud builds submit --tag $(DOCKER_TAG) --tag $(DOCKER_TAG)
-	gcloud run deploy $(APP) --image $(DOCKER_TAG) --platform managed --region $(REGION) --revision-suffix=$(VERSION)
+	gcloud run deploy $(APP) --image $(DOCKER_TAG) --platform managed --region $(REGION)
 
 run:
 	docker compose up
