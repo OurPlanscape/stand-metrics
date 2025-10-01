@@ -2,9 +2,8 @@ name: Lint & Test
 
 on:
   push:
-    branches: ["cleanup"]
-  pull_request:
-    branches: ["main"]
+    branches-ignore:
+      - main
 
 jobs:
   ruff:
