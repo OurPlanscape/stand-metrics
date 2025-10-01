@@ -5,7 +5,7 @@ on:
     branches:
       - main
   release:
-    type: [published, prereleased]
+    types: [published]
 
 env:
   APP_NAME: stand-metrics
@@ -18,14 +18,7 @@ jobs:
 
     steps:
       - name: Set Target Environment
-        env:
-          # sets the ENV value to be based on the type of event triggerd
-          # push -> DEV
-          # prereleased -> STAGING
-          # releases -> PRODUCTION
-          ENV: ${{ github.event_name == 'release'
-            && (github.event.release.prerelease && 'staging' || 'production')
-            || 'dev' }}
+
         run: echo "DEPLOYING TO $ENV"
       - name: Checkout code
         uses: actions/checkout@v4
@@ -42,8 +35,13 @@ jobs:
         run: gcloud auth configure-docker
 
       - name: Build and push Docker image
+        env:
+          # sets the ENV value to be based on the type of event triggerd
+          # push -> DEV
+          # prereleased -> STAGING
+          # releases -> PRODUCTION
+          ENV: ${{ github.event_name == 'release'
+            && (github.event.release.prerelease && 'staging' || 'production')
+            || 'dev' }}
         run: |
-          make deploy ENV=${{env.ENV}}
-          # docker build -t $DOCKER_TAG .
-          # gcloud builds submit --tag $DOCKER_TAG
-          # gcloud run deploy planscape-${{env.APP_NAME}} --platform managed --region ${{env.REGION}}
+          make deploy ENV=$ENV
