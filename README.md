@@ -40,3 +40,7 @@ Github actions handles the deployment as well as follows:
 
 Everything is running from github actions. Install ruff locally and configure
 your editor to work with ruff.
+
+# infrastructure
+
+Check the infrastructure repo. It's all done with terraform.
