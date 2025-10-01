@@ -19,6 +19,10 @@ jobs:
     steps:
       - name: Set Target Environment
         env:
+          # sets the ENV value to be based on the type of event triggerd
+          # push -> DEV
+          # prereleased -> STAGING
+          # releases -> PRODUCTION
           ENV: ${{ github.event_name == 'release'
             && (github.event.release.prerelease && 'staging' || 'production')
             || 'dev' }}
