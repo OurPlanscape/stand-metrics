@@ -4,15 +4,31 @@ on:
   push:
     branches:
       - main
+  release:
+    type: [published, prereleased]
 
+env:
+  APP_NAME: stand-metrics
+  ENV: dev
+  REPO_URL: us-central1-docker.pkg.dev
+  REGION: us-central1
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set Target Environment
+        env:
+          # sets the ENV value to be based on the type of event triggerd
+          # push -> DEV
+          # prereleased -> STAGING
+          # releases -> PRODUCTION
+          ENV: ${{ github.event_name == 'release'
+            && (github.event.release.prerelease && 'staging' || 'production')
+            || 'dev' }}
+        run: echo "DEPLOYING TO $ENV"
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Google Cloud SDK
         id: auth
         uses: google-github-actions/auth@v2
@@ -25,20 +41,9 @@ jobs:
       - name: Configure Docker for GCP
         run: gcloud auth configure-docker
 
-      - name: use gcloud
-        run: "gcloud info"
-
-      # - name: Build and push Docker image
-      #   run: |
-      #     IMAGE=gcr.io/${{ secrets.GCP_PROJECT_ID }}/stand-metrics:${{ github.sha }}
-      #     docker build -t $IMAGE .
-      #     docker push $IMAGE
-
-      # - name: Deploy to Cloud Run
-      #   run: |
-      #     IMAGE=gcr.io/${{ secrets.GCP_PROJECT_ID }}/stand-metrics:${{ github.sha }}
-      #     gcloud run deploy stand-metrics \
-      #       --image $IMAGE \
-      #       --region ${{ secrets.GCP_REGION }} \
-      #       --platform managed \
-      #       --allow-unauthenticated
+      - name: Build and push Docker image
+        run: |
+          make deploy ENV=${{env.ENV}}
+          # docker build -t $DOCKER_TAG .
+          # gcloud builds submit --tag $DOCKER_TAG
+          # gcloud run deploy planscape-${{env.APP_NAME}} --platform managed --region ${{env.REGION}}
