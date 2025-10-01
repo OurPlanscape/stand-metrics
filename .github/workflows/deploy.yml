@@ -18,7 +18,7 @@ jobs:
         run: |
           CURRENT_VERSION=$(date '+%Y.%m.%d')-$(git log --abbrev=10 --format=%h | head -1)
           echo "VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
-          echo "DOCKER_TAG=${{env.REPO_URL}}/${{secrets.GCP_PROJECT}}/planscape-{{env.APP_NAME}}-{{env.ENV}}/${{env.APP_NAME}}:${{env.VERSION}}" >> $GITHUB_ENV
+          echo "DOCKER_TAG=${{env.REPO_URL}}/${{secrets.GCP_PROJECT}}/planscape-{{env.APP_NAME}}-${{env.ENV}}/${{env.APP_NAME}}:${{env.VERSION}}" >> $GITHUB_ENV
       - name: Set up Google Cloud SDK
         id: auth
         uses: google-github-actions/auth@v2
