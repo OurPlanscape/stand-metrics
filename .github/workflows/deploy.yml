@@ -19,7 +19,9 @@ jobs:
     steps:
       - name: Set Target Environment
         env:
-          ENV: ${{github.event.action == 'prereleased' && 'staging' || 'production'}}
+          ENV: ${{ github.event_name == 'release'
+            && (github.event.release.prerelease && 'staging' || 'production')
+            || 'dev' }}
         run: echo "DEPLOYING TO $ENV"
       - name: Checkout code
         uses: actions/checkout@v4
