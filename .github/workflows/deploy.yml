@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  release:
+    type: [published, prereleased]
 
 env:
   APP_NAME: stand-metrics
@@ -15,13 +17,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set Target Environment
+        env:
+          ENV: ${{github.event.action == 'prereleased' && 'staging' || 'production'}}
+        run: echo "DEPLOYING TO $ENV"
       - name: Checkout code
         uses: actions/checkout@v4
-      # - name: Set Version Number
-      #   run: |
-      #     CURRENT_VERSION=$(date '+%Y.%m.%d')-$(git log --abbrev=10 --format=%h | head -1)
-      #     echo "VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
-      #     echo "DOCKER_TAG=${{env.REPO_URL}}/${{secrets.GCP_PROJECT}}/planscape-{{env.APP_NAME}}-${{env.ENV}}/${{env.APP_NAME}}:${{env.VERSION}}" >> $GITHUB_ENV
       - name: Set up Google Cloud SDK
         id: auth
         uses: google-github-actions/auth@v2
