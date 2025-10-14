@@ -12,12 +12,19 @@ REGION=us-central1
 build:
 	docker build -t $(DOCKER_TAG) .
 
-deploy: build
+push:
 	gcloud builds submit --tag $(DOCKER_TAG) --tag $(DOCKER_TAG)
+
+deploy:
 	gcloud run deploy $(APP) --image $(DOCKER_TAG) --platform managed --region $(REGION)
+
+build-deploy: build push deploy
 
 run:
 	docker compose up
 
 test: build
 	./bin/run.sh uv run pytest .
+
+get-tag:
+	echo $(VERSION)
