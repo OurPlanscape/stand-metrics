@@ -5,6 +5,7 @@ COPY --from=builder /uv /uvx /bin/
 
 ENV PYTHONUNBUFFERED True
 ENV APP_HOME /app
+ENV DEBIAN_FRONTEND=noninteractive
 
 ADD . /app
 WORKDIR /app
