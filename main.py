@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 
 from calculator import calculate
 from config import settings
@@ -18,8 +18,3 @@ async def get_metrics(request: StandMetricRequest):
     stands = request.stands
     stats = calculate(datalayer=datalayer, stands=stands)
     return stats
-
-
-@app.get("/exception")
-async def raise_exception(request: Request):
-    raise KeyError()
