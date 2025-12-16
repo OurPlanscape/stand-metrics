@@ -10,6 +10,7 @@ dependencies = [
     "geojson-pydantic>=2.0.0",
     "opentelemetry-instrumentation-fastapi>=0.60b1",
     "opentelemetry-sdk>=1.39.1",
+    "pip>=25.3",
     "pydantic-settings>=2.11.0",
     "rasterstats>=0.20.0",
 ]
