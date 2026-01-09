@@ -8,6 +8,9 @@ dependencies = [
     "boto3>=1.40.38",
     "fastapi[standard]>=0.117.1",
     "geojson-pydantic>=2.0.0",
+    "opentelemetry-distro==0.43b0",
+    "opentelemetry-exporter-otlp==1.22.0",
+    "pip>=25.3",
     "pydantic-settings>=2.11.0",
     "rasterstats>=0.20.0",
 ]
