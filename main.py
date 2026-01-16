@@ -1,10 +1,17 @@
+import logging
+
 from fastapi import FastAPI
+from google.cloud import logging as cloud_logging
 
 from calculator import calculate
 from config import settings
 from models import StandMetricRequest
 
 app = FastAPI()
+
+client = cloud_logging.Client()
+
+client.setup_logging(log_level=logging.INFO)
 
 
 @app.get("/health")
