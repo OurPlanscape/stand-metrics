@@ -25,5 +25,7 @@ class MetricResult(BaseModel):
     mean: Optional[float]
     median: Optional[float]
     max: Optional[float]
+    sum: Optional[float]
+    count: Optional[int]
     majority: Optional[float]
     minority: Optional[float]
